@@ -42,7 +42,7 @@ class SudokuSolver {
         // get existing value placed
         const existingValue = rowValues[column - 1];
 
-        // make sure placement location does not already contain a number
+        // make sure placement location doesn't contain a value or contains same value
         // make sure placements row does not already have value.
         return (existingValue == '.' || existingValue == value) && !rowValues.includes(value);
 
@@ -64,11 +64,65 @@ class SudokuSolver {
 
         const columnKeys = Object.keys(columns);
 
-        columnKeys.forEach((key, index) => {
+        let offset = 0;
 
-            
+        columnKeys.forEach(() => {
 
+            columnKeys.forEach((key, index) => {
+
+                const start = index + (9 * offset)
+                const end = start + 1;
+                
+                const columnValue = puzzleString.slice(start, end);
+                
+                columns[key].push(columnValue);
+    
+            });
+
+            offset += 1;
         });
+
+        // get column values for placement
+        const columnValues = columns[column];
+
+        // get existing value placed
+        let existingValue;
+
+        switch (row) {
+            case 'A':
+                existingValue = columnValues[0];
+                break;
+            case 'B':
+                existingValue = columnValues[1];
+                break;
+            case 'C':
+                existingValue = columnValues[2];
+                break;
+            case 'D':
+                existingValue = columnValues[3];
+                break;
+            case 'E':
+                existingValue = columnValues[4];
+                break;
+            case 'F':
+                existingValue = columnValues[5];
+                break;
+            case 'G':
+                existingValue = columnValues[6];
+                break;
+            case 'H':
+                existingValue = columnValues[7];
+                break;
+            case 'I':
+                existingValue = columnValues[8];
+                break;
+            default:
+                break;
+        }
+
+        // make sure placement location doesn't contain a value or contains same value
+        // make sure placements row does not already have value.
+        return (existingValue == '.' || existingValue == value) && !columnValues.includes(value);
 
     }
 

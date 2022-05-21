@@ -58,5 +58,29 @@ suite('UnitTests', () => {
 
     });
 
+    test('checkColPlacement(puzzleString, row, column, value) valid column placement', (done) => {
+
+        const input = puzzlesAndSolutions[0][0];
+        const row = 'A';
+        const column = '2';
+        const value = '5';
+
+        assert.equal(solver.checkColPlacement(input, row, column, value), true);
+        done();
+
+    });
+
+    test('checkColPlacement(puzzleString, row, column, value) invalid column placement', (done) => {
+
+        const input = puzzlesAndSolutions[0][0];
+        const row = 'A';
+        const column = '2';
+        const value = '6';
+
+        assert.equal(solver.checkColPlacement(input, row, column, value), false);
+        done();
+
+    });
+
 
 });
