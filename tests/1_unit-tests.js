@@ -28,12 +28,41 @@ suite('UnitTests', () => {
     test('SudokuSolver.validate(puzzleString) puzzle string of 82 characters with valid characters', (done) => {
 
         const input = puzzlesAndSolutions[0][0] + '0';
-        
+
         assert.equal(solver.validate(input), false);
         done();
 
     });
 
+    test('checkRowPlacement(puzzleString, row, column, value) valid row placement', (done) => {
+
+        const input = puzzlesAndSolutions[0][0];
+
+        const row = 'A';
+
+        const column = '2';
+
+        const value = '9';
+
+        assert.equal(solver.checkRowPlacement(input, row, column, value), true);
+        done();
+
+    });
+
+    test('checkRowPlacement(puzzleString, row, column, value) invalid row placement', (done) => {
+
+        const input = puzzlesAndSolutions[0][0];
+
+        const row = 'A';
+
+        const column = '2';
+
+        const value = '8';
+
+        assert.equal(solver.checkRowPlacement(input, row, column, value), false);
+        done();
+
+    });
 
 
 });
