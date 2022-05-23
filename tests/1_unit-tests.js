@@ -82,5 +82,29 @@ suite('UnitTests', () => {
 
     });
 
+    test('checkRegionPlacement(puzzleString, row, column, value) valid region placement', (done) => {
+
+        const input = puzzlesAndSolutions[0][0];
+        const row = 'A';
+        const column = '2';
+        const value = '4';
+
+        assert.equal(solver.checkRegionPlacement(input, row, column, value), true);
+        done();
+
+    });
+
+    test('checkRegionPlacement(puzzleString, row, column, value) invalid region placement', (done) => {
+
+        const input = puzzlesAndSolutions[0][0];
+        const row = 'A';
+        const column = '2';
+        const value = '2';
+
+        assert.equal(solver.checkRegionPlacement(input, row, column, value), false);
+        done();
+
+    });
+
 
 });

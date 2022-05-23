@@ -64,13 +64,11 @@ class SudokuSolver {
 
         const columnKeys = Object.keys(columns);
 
-        let offset = 0;
+        columnKeys.forEach((n, i) => {
 
-        columnKeys.forEach(() => {
+            columnKeys.forEach((key, j) => {
 
-            columnKeys.forEach((key, index) => {
-
-                const start = index + (9 * offset)
+                const start = j + (9 * i)
                 const end = start + 1;
                 
                 const columnValue = puzzleString.slice(start, end);
@@ -79,7 +77,6 @@ class SudokuSolver {
     
             });
 
-            offset += 1;
         });
 
         // get column values for placement
@@ -128,7 +125,112 @@ class SudokuSolver {
 
     checkRegionPlacement(puzzleString, row, column, value) {
 
+        const location = row + column;
 
+        let grids = {
+            gridOne: {
+                locations: ['A1', 'A2', 'A3', 'B1', 'B2', 'B3', 'C1', 'C2', 'C3'],
+                values: []
+            },
+            gridTwo: {
+                locations: ['A4', 'A5', 'A6', 'B4', 'B5', 'B6', 'C4', 'C5', 'C6'],
+                values: []
+            },
+            gridThree: {
+                locations: ['A7', 'A8', 'A9', 'B7', 'B8', 'B9', 'C7', 'C8', 'C9'],
+                values: []
+            },
+            gridFour: {
+                locations: ['D1', 'D2', 'D3', 'E1', 'E2', 'E3', 'F1', 'F2', 'F3'],
+                values: []
+            },
+            gridFive: {
+                locations: ['D4', 'D5', 'D6', 'E4', 'E5', 'E6', 'F4', 'F5', 'F6'],
+                values: []
+            },
+            gridSix: {
+                locations: ['D7', 'D8', 'D9', 'E7', 'E8', 'E9', 'F7', 'F8', 'F9'],
+                values: []
+            },
+            gridSeven: {
+                locations: ['G1', 'G2', 'G3', 'H1', 'H2', 'H3', 'I1', 'I2', 'I3'],
+                values: []
+            },
+            gridEight: {
+                locations: ['G4', 'G5', 'G6', 'H4', 'H5', 'H6', 'I4', 'I5', 'I6'],
+                values: []
+            },
+            gridNine: {
+                locations: ['G7', 'G8', 'G9', 'H7', 'H8', 'H9', 'I7', 'I8', 'I9'],
+                values: []
+            }
+        };
+
+        const gridKeys = Object.keys(grids);
+
+        gridKeys.forEach((key, i) => {
+
+            let offset = 0;
+
+            if (i >= 3 && i <= 5) {
+
+                offset += 2;
+
+            }
+
+            if (i >= 6 && i <= 8) {
+
+                offset += 4;
+
+            }
+
+            for (let j = 0; j < 3; j++) {
+
+                const start = (i * 3) + (9 * (j + offset));
+                const end = start + 3;
+                const gridValues = puzzleString.slice(start, end).split('');
+
+                grids[key].values = grids[key].values.concat(gridValues);
+
+            }
+    
+        });
+
+        let gridValues = [];
+
+        gridKeys.forEach(key => {
+
+            const grid = grids[key]
+
+            if (grid.locations.includes(location)) {
+                gridValues = gridValues.concat(grid.values);
+            }
+
+        });
+
+        let existingValue;
+
+        switch (row) {
+            case 'A':
+            case 'D':
+            case 'H':
+                existingValue = gridValues[(parseInt(column) - 1)];
+                break;
+            case 'B':
+            case 'E':
+            case 'H':
+                existingValue = gridValues[3 + (parseInt(column) - 1)];
+                break;
+            case 'C':
+            case 'F':
+            case 'I':
+                existingValue = gridValues[6 + (parseInt(column) - 1)];
+                break;
+            default:
+                break;
+        }
+
+        return (existingValue == '.' || existingValue == value) && !gridValues.includes(value);
 
     }
 
