@@ -185,7 +185,7 @@ class SudokuSolver {
         // transform character array into
         // 2-d array with each element representing a row
         // that contains an array of column values
-        let generateBoard = (puzzleValues) => {
+        let createBoard = (puzzleValues) => {
 
             let board = [[], [], [], [], [], [], [], [], []]
             let boardRow = -1
@@ -211,7 +211,7 @@ class SudokuSolver {
             return board;
         }
 
-        let canPlace = (board, row, col, value) => {
+        let checkPlacement = (board, row, col, value) => {
 
             // verify that the value can be
             // placed in the given column
@@ -256,7 +256,7 @@ class SudokuSolver {
 
         }
 
-        let solveFromCell = (board, row, col) => {
+        let solveForGivenCell = (board, row, col) => {
             
             // reset column and increment
             // row when end of row reached
@@ -279,7 +279,7 @@ class SudokuSolver {
             // next cell
             if (board[row][col] != '.') {
 
-                return solveFromCell(board, row, col + 1);
+                return solveForGivenCell(board, row, col + 1);
 
             }
 
@@ -291,11 +291,11 @@ class SudokuSolver {
 
                 let valueToPlace = i.toString();
 
-                if (canPlace(board, row, col, valueToPlace)) {
+                if (checkPlacement(board, row, col, valueToPlace)) {
 
                     board[row][col] = valueToPlace;
 
-                    if (solveFromCell(board, row, col + 1) != false) {
+                    if (solveForGivenCell(board, row, col + 1) != false) {
 
                         return board;
 
@@ -313,8 +313,8 @@ class SudokuSolver {
         }
 
         // get the solution for the given puzzle
-        let board = generateBoard(puzzle);
-        let solution = solveFromCell(board, 0, 0);
+        let board = createBoard(puzzle);
+        let solution = solveForGivenCell(board, 0, 0);
         
         if (solution == false) return false;
         return solution.flat().join('');
