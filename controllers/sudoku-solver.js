@@ -1,5 +1,3 @@
-import { columns } from '../models/columns';
-import { rows } from '../models/rows';
 import { grids } from '../models/grids';
 
 class SudokuSolver {
@@ -15,6 +13,18 @@ class SudokuSolver {
     }
 
     checkRowPlacement(puzzleString, row, column, value) {
+
+        const rows = {
+            A: [],
+            B: [],
+            C: [],
+            D: [],
+            E: [],
+            F: [],
+            G: [],
+            H: [],
+            I: [],
+        };
 
         // rowKeys
         const rowKeys = Object.keys(rows);
@@ -45,8 +55,20 @@ class SudokuSolver {
 
     checkColPlacement(puzzleString, row, column, value) {
 
-        const columnKeys = Object.keys(columns);
+        const columns = {
+            1: [],
+            2: [],
+            3: [],
+            4: [],
+            5: [],
+            6: [],
+            7: [],
+            8: [],
+            9: [],
+        };
 
+        const columnKeys = Object.keys(columns);
+        
         columnKeys.forEach((key, i) => {
 
             let values = []
@@ -58,11 +80,8 @@ class SudokuSolver {
                 
                 const columnValue = puzzleString.slice(start, end);
 
-                values.push(columnValue);
-    
+                columns[n].push(columnValue);
             });
-
-            columns[key] = values;
 
         });
 
@@ -103,7 +122,7 @@ class SudokuSolver {
             default:
                 break;
         }
-
+        
         // make sure placement location doesn't contain a value and column doesn't contain value
         // or location already contains value
         return (existingValue == '.' && !columnValues.includes(value)) || existingValue == value;

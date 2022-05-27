@@ -1,8 +1,6 @@
 'use strict';
 
 const SudokuSolver = require('../controllers/sudoku-solver');
-import { columns } from '../models/columns';
-import { rows } from '../models/rows';
 
 module.exports = function (app) {
 
@@ -31,8 +29,8 @@ module.exports = function (app) {
             const col = coordinate.slice(1, coordinate.length);
 
             // get the valid rows and cols
-            const validRows = Object.keys(rows);
-            const validColumns = Object.keys(columns);
+            const validRows = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I'];
+            const validColumns = ['1', '2', '3', '4', '5', '6', '7', '8', '9'];
 
             // if the passed row or col value are not valid return error.
             if (!validRows.includes(row) || !validColumns.includes(col)) return res.status(200).json({error: 'Invalid coordinate'});
