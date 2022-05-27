@@ -51,7 +51,7 @@ suite('UnitTests', () => {
         const input = puzzlesAndSolutions[0][0];
         const row = 'A';
         const column = '2';
-        const value = '8';
+        const value = '1';
 
         assert.equal(solver.checkRowPlacement(input, row, column, value), false);
         done();
@@ -102,6 +102,35 @@ suite('UnitTests', () => {
         const value = '2';
 
         assert.equal(solver.checkRegionPlacement(input, row, column, value), false);
+        done();
+
+    });
+
+    test('solve(puzzleString) valid puzzle string', (done) => {
+
+        const puzzle = puzzlesAndSolutions[0][0];
+        const solution = puzzlesAndSolutions[0][1];
+
+        assert.equal(solver.solve(puzzle), solution);
+        done();
+
+    });
+
+    test('solve(puzzleString) invalid puzzle string', (done) => {
+
+        const puzzle = puzzlesAndSolutions[0][0]+'0';
+
+        assert.equal(solver.solve(puzzle), false);
+        done();
+
+    });
+
+    test('solve(puzzleString) uncomplete puzzle yields expected solution', (done) => {
+
+        const puzzle = puzzlesAndSolutions[0][0];
+        const solution = puzzlesAndSolutions[0][1];
+
+        assert.equal(solver.solve(puzzle), solution);
         done();
 
     });

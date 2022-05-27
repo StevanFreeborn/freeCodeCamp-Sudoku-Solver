@@ -1,3 +1,7 @@
+import { columns } from '../models/columns';
+import { rows } from '../models/rows';
+import { grids } from '../models/grids';
+
 class SudokuSolver {
 
     validate(puzzleString) {
@@ -7,19 +11,6 @@ class SudokuSolver {
     }
 
     checkRowPlacement(puzzleString, row, column, value) {
-
-        // rows
-        const rows = {
-            A: [],
-            B: [],
-            C: [],
-            D: [],
-            E: [],
-            F: [],
-            G: [],
-            H: [],
-            I: [],
-        };
 
         // rowKeys
         const rowKeys = Object.keys(rows);
@@ -49,18 +40,6 @@ class SudokuSolver {
     }
 
     checkColPlacement(puzzleString, row, column, value) {
-
-        const columns = {
-            1: [],
-            2: [],
-            3: [],
-            4: [],
-            5: [],
-            6: [],
-            7: [],
-            8: [],
-            9: [],
-        };
 
         const columnKeys = Object.keys(columns);
 
@@ -125,49 +104,15 @@ class SudokuSolver {
 
     checkRegionPlacement(puzzleString, row, column, value) {
 
+        // build location from row and column values
         const location = row + column;
 
-        let grids = {
-            gridOne: {
-                locations: ['A1', 'A2', 'A3', 'B1', 'B2', 'B3', 'C1', 'C2', 'C3'],
-                values: []
-            },
-            gridTwo: {
-                locations: ['A4', 'A5', 'A6', 'B4', 'B5', 'B6', 'C4', 'C5', 'C6'],
-                values: []
-            },
-            gridThree: {
-                locations: ['A7', 'A8', 'A9', 'B7', 'B8', 'B9', 'C7', 'C8', 'C9'],
-                values: []
-            },
-            gridFour: {
-                locations: ['D1', 'D2', 'D3', 'E1', 'E2', 'E3', 'F1', 'F2', 'F3'],
-                values: []
-            },
-            gridFive: {
-                locations: ['D4', 'D5', 'D6', 'E4', 'E5', 'E6', 'F4', 'F5', 'F6'],
-                values: []
-            },
-            gridSix: {
-                locations: ['D7', 'D8', 'D9', 'E7', 'E8', 'E9', 'F7', 'F8', 'F9'],
-                values: []
-            },
-            gridSeven: {
-                locations: ['G1', 'G2', 'G3', 'H1', 'H2', 'H3', 'I1', 'I2', 'I3'],
-                values: []
-            },
-            gridEight: {
-                locations: ['G4', 'G5', 'G6', 'H4', 'H5', 'H6', 'I4', 'I5', 'I6'],
-                values: []
-            },
-            gridNine: {
-                locations: ['G7', 'G8', 'G9', 'H7', 'H8', 'H9', 'I7', 'I8', 'I9'],
-                values: []
-            }
-        };
-
+        // get keys for grids object
         const gridKeys = Object.keys(grids);
 
+        // for each grid key loop through
+        // and slice values from puzzle string
+        // to create each grids corresponding grid values
         gridKeys.forEach((key, i) => {
 
             let offset = 0;
@@ -184,57 +129,190 @@ class SudokuSolver {
 
             }
 
+            let values = [];
+
             for (let j = 0; j < 3; j++) {
 
                 const start = (i * 3) + (9 * (j + offset));
                 const end = start + 3;
                 const gridValues = puzzleString.slice(start, end).split('');
 
-                grids[key].values = grids[key].values.concat(gridValues);
+                values = values.concat(gridValues);
 
             }
+
+            grids[key].values = values;
     
         });
 
         let gridValues = [];
+        let locations;
 
+        // for each grid key loop through grids
+        // find grid that has the location that was passed
+        // get that grids grid values
         gridKeys.forEach(key => {
 
             const grid = grids[key]
 
             if (grid.locations.includes(location)) {
                 gridValues = gridValues.concat(grid.values);
+                locations = grid.locations;
             }
 
         });
 
-        let existingValue;
+        // get existing value from grid values based on location passed
+        let existingValue = gridValues[locations.indexOf(location)];
 
-        switch (row) {
-            case 'A':
-            case 'D':
-            case 'H':
-                existingValue = gridValues[(parseInt(column) - 1)];
-                break;
-            case 'B':
-            case 'E':
-            case 'H':
-                existingValue = gridValues[3 + (parseInt(column) - 1)];
-                break;
-            case 'C':
-            case 'F':
-            case 'I':
-                existingValue = gridValues[6 + (parseInt(column) - 1)];
-                break;
-            default:
-                break;
-        }
-
+        // make sure placement location doesn't contain a value or contains same value
+        // make sure placements grid does not already have value.
         return (existingValue == '.' || existingValue == value) && !gridValues.includes(value);
 
     }
 
     solve(puzzleString) {
+
+        if (!this.validate(puzzleString)) return false;
+
+        // create character array
+        let puzzle = puzzleString.split('');
+
+        // transform character array into
+        // 2-d array with each element representing a row
+        // that contains an array of column values
+        let generateBoard = (puzzleValues) => {
+
+            let board = [[], [], [], [], [], [], [], [], []]
+            let boardRow = -1
+
+            for (let i = 0; i < puzzleValues.length; i++) {
+
+                // when you've reached a multiple of 9
+                // it means you are at the beginning
+                // of a new row so need to increment the
+                // board row
+                if (i % 9 === 0) {
+
+                    boardRow = boardRow + 1;
+
+                }
+
+                // push the current puzzle value into the
+                // correct board rows array
+                board[boardRow].push(puzzleValues[i]);
+            }
+
+            // return the board
+            return board;
+        }
+
+        let canPlace = (board, row, col, value) => {
+
+            // verify that the value can be
+            // placed in the given column
+            for (let i = 0; i < 9; i++) {
+
+                if (board[i][col] == value) {
+
+                    return false;
+
+                }
+            }
+
+            // verify that the value can be
+            // placed in the given row
+            for (let j = 0; j < 9; j++) {
+
+                if (board[row][j] == value) {
+
+                    return false;
+
+                }
+            }
+
+            let boxTopRow = parseInt(row / 3) * 3;
+            let boxLeftColumn = parseInt(col / 3) * 3;
+
+            // verify that the value can be
+            // placed in the given grid
+            for (let k = boxTopRow; k < boxTopRow + 3; k++) {
+
+                for (let l = boxLeftColumn; l < boxLeftColumn + 3; l++) {
+
+                    if (board[k][l] == value) {
+
+                        return false;
+
+                    }
+                }
+            }
+
+            return true;
+
+        }
+
+        let solveFromCell = (board, row, col) => {
+            
+            // reset column and increment
+            // row when end of row reached
+            if (col === 9) {
+
+                col = 0;
+                row++;
+
+            }
+
+            // return solved board
+            // when completed all rows
+            if (row === 9) {
+
+                return board;
+
+            }
+
+            // if cell is already filled move to
+            // next cell
+            if (board[row][col] != '.') {
+
+                return solveFromCell(board, row, col + 1);
+
+            }
+
+            // attempt to place values 1 - 9 in given
+            // cell and if a value can be placed
+            // perform a recursive call to check the rest
+            // of the cells can be completed without issue.
+            for (let i = 1; i < 10; i++) {
+
+                let valueToPlace = i.toString();
+
+                if (canPlace(board, row, col, valueToPlace)) {
+
+                    board[row][col] = valueToPlace;
+
+                    if (solveFromCell(board, row, col + 1) != false) {
+
+                        return board;
+
+                    }
+                    else {
+
+                        board[row][col] = '.';
+
+                    }
+                }
+            }
+
+            return false;
+
+        }
+
+        // get the solution for the given puzzle
+        let board = generateBoard(puzzle);
+        let solution = solveFromCell(board, 0, 0);
+
+        return solution.flat().join('');
 
     }
 }
