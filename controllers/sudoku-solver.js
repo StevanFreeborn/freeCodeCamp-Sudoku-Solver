@@ -47,18 +47,22 @@ class SudokuSolver {
 
         const columnKeys = Object.keys(columns);
 
-        columnKeys.forEach((n, i) => {
+        columnKeys.forEach((key, i) => {
 
-            columnKeys.forEach((key, j) => {
+            let values = []
+
+            columnKeys.forEach((n, j) => {
 
                 const start = j + (9 * i)
                 const end = start + 1;
                 
                 const columnValue = puzzleString.slice(start, end);
-                
-                columns[key].push(columnValue);
+
+                values.push(columnValue);
     
             });
+
+            columns[key] = values;
 
         });
 
