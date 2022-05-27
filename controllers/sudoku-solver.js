@@ -37,9 +37,9 @@ class SudokuSolver {
         // get existing value placed
         const existingValue = rowValues[column - 1];
 
-        // make sure placement location doesn't contain a value or contains same value
-        // make sure placements row does not already have value.
-        return (existingValue == '.' || existingValue == value) && !rowValues.includes(value);
+        // make sure placement location doesn't contain a value and row doesn't contain value
+        // or same value already exists in location
+        return (existingValue == '.' && !rowValues.includes(value)) || existingValue == value;
 
     }
 
@@ -100,9 +100,9 @@ class SudokuSolver {
                 break;
         }
 
-        // make sure placement location doesn't contain a value or contains same value
-        // make sure placements row does not already have value.
-        return (existingValue == '.' || existingValue == value) && !columnValues.includes(value);
+        // make sure placement location doesn't contain a value and column doesn't contain value
+        // or location already contains value
+        return (existingValue == '.' && !columnValues.includes(value)) || existingValue == value;
 
     }
 
@@ -169,9 +169,9 @@ class SudokuSolver {
         // get existing value from grid values based on location passed
         let existingValue = gridValues[locations.indexOf(location)];
 
-        // make sure placement location doesn't contain a value or contains same value
-        // make sure placements grid does not already have value.
-        return (existingValue == '.' || existingValue == value) && !gridValues.includes(value);
+        // make sure placement location doesn't contain a value and grid doesn't contain value
+        // or location already contains value.
+        return (existingValue == '.' && !gridValues.includes(value)) || existingValue == value;
 
     }
 
