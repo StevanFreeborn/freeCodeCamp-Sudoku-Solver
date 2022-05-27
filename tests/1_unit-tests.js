@@ -125,12 +125,16 @@ suite('UnitTests', () => {
 
     });
 
-    test('solve(puzzleString) uncomplete puzzle yields expected solution', (done) => {
+    test('solve(puzzleString) uncomplete puzzles yield expected solutions', (done) => {
 
-        const puzzle = puzzlesAndSolutions[0][0];
-        const solution = puzzlesAndSolutions[0][1];
+        puzzlesAndSolutions.forEach(element => {
 
-        assert.equal(solver.solve(puzzle), solution);
+            const puzzle = element[0];
+            const solution = element[1];
+            assert.equal(solver.solve(puzzle), solution);
+
+        });
+
         done();
 
     });
