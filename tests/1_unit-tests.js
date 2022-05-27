@@ -20,7 +20,7 @@ suite('UnitTests', () => {
 
         const input = puzzlesAndSolutions[0][0].replace(/\./g, '?');
 
-        assert.equal(solver.validate(input), false);
+        assert.equal(solver.validate(input), 'Invalid characters in puzzle');
         done();
 
     });
@@ -29,7 +29,7 @@ suite('UnitTests', () => {
 
         const input = puzzlesAndSolutions[0][0] + '0';
 
-        assert.equal(solver.validate(input), false);
+        assert.equal(solver.validate(input), 'Expected puzzle to be 81 characters long');
         done();
 
     });

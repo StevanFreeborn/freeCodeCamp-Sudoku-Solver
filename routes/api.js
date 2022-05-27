@@ -1,6 +1,6 @@
 'use strict';
 
-const SudokuSolver = require('../controllers/sudoku-solver.js');
+const SudokuSolver = require('../controllers/sudoku-solver');
 
 module.exports = function (app) {
 
@@ -15,9 +15,18 @@ module.exports = function (app) {
         .post((req, res) => {
 
             const puzzleString = req.body.puzzle;
-            console.log(puzzleString);
 
+            if (puzzleString == undefined) return res.status(200).json({error: 'Required field missing' });
+
+            const validate = solver.validate(puzzleString);
+
+            if (validate != true) return res.status(200).json({error: validate});
+
+            const solution = solver.solve(puzzleString);
             
+            if (solution == false) return res.status(200).json({error: 'Puzzle cannot be solved'});
+
+            return res.status(200).json({solution: solution});
 
         });
 };

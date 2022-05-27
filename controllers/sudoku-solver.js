@@ -6,7 +6,11 @@ class SudokuSolver {
 
     validate(puzzleString) {
 
-        return puzzleString.length == 81 && !puzzleString.match(/[^\.\d]/g);
+        if (puzzleString.length != 81) return 'Expected puzzle to be 81 characters long';
+
+        if (puzzleString.match(/[^\.\d]/g)) return 'Invalid characters in puzzle';
+
+        return true;
 
     }
 
@@ -173,7 +177,7 @@ class SudokuSolver {
 
     solve(puzzleString) {
 
-        if (!this.validate(puzzleString)) return false;
+        if (this.validate(puzzleString) != true) return false;
 
         // create character array
         let puzzle = puzzleString.split('');
@@ -311,7 +315,8 @@ class SudokuSolver {
         // get the solution for the given puzzle
         let board = generateBoard(puzzle);
         let solution = solveFromCell(board, 0, 0);
-
+        
+        if (solution == false) return false;
         return solution.flat().join('');
 
     }
