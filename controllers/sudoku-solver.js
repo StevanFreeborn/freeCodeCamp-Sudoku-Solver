@@ -188,7 +188,7 @@ class SudokuSolver {
         let createBoard = (puzzleValues) => {
 
             let board = [[], [], [], [], [], [], [], [], []]
-            let boardRow = -1
+            let row = -1
 
             for (let i = 0; i < puzzleValues.length; i++) {
 
@@ -198,13 +198,13 @@ class SudokuSolver {
                 // board row
                 if (i % 9 === 0) {
 
-                    boardRow = boardRow + 1;
+                    row = row + 1;
 
                 }
 
                 // push the current puzzle value into the
                 // correct board rows array
-                board[boardRow].push(puzzleValues[i]);
+                board[row].push(puzzleValues[i]);
             }
 
             // return the board
